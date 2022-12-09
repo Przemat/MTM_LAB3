@@ -1,7 +1,6 @@
 package com.example.lab3_mtm.ui.player
 
 import android.Manifest
-import android.R
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Activity.RESULT_OK
@@ -10,7 +9,6 @@ import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
-import android.os.Binder
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -24,13 +22,13 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.chibde.visualizer.CircleBarVisualizer
+import com.example.lab3_mtm.R
 import com.example.lab3_mtm.databinding.FragmentPlayerBinding
-import com.example.lab3_mtm.ui.player.PlayerViewModel
 import java.io.IOException
 import java.util.*
 
@@ -86,7 +84,6 @@ class PlayerFragment : Fragment() {
         pauseButton = binding.pauseButton
         stopButton = binding.stopButton
         playAudioProgress = binding.playAudioProgressbar
-
         /* Initialize audio progress handler. */if (audioProgressHandler == null) {
             audioProgressHandler = @SuppressLint("HandlerLeak")
             object : Handler() {
@@ -158,6 +155,7 @@ class PlayerFragment : Fragment() {
                 initAudioPlayer()
                 audioPlayer!!.start()
                 audioIsPlaying = true
+                circleBarVisualization()
 
                 // Display progressbar.
                 playAudioProgress!!.visibility = ProgressBar.VISIBLE
@@ -223,6 +221,17 @@ class PlayerFragment : Fragment() {
             }
         }
         return root
+    }
+
+    private fun circleBarVisualization() {
+        val circleBarVisualizer: CircleBarVisualizer = binding.visualizerCircleBar
+        circleBarVisualizer.setVisibility(View.VISIBLE)
+
+        // set the custom color to the line.
+        circleBarVisualizer.setColor(ContextCompat.getColor(context!!, R.color.myColor3))
+
+        // Set the media player to the visualizer.
+        circleBarVisualizer.setPlayer(audioPlayer!!.getAudioSessionId())
     }
 
     /* Initialize media player. */
@@ -338,4 +347,5 @@ class PlayerFragment : Fragment() {
         // Used to distinguish log data.
         const val TAG_PLAY_AUDIO = "PLAY_AUDIO"
     }
+
 }
